@@ -18,7 +18,7 @@ if config("ENV") != "production":
 else:
     DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["cleantodo-staging.herokuapp.com/=", "cleantodo.herokuapp.com"]
 
 AUTH_USER_MODEL = "auth_controller.CustomUser"
 
@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework",
     "auth_controller.apps.AuthControllerConfig",
 ]
 
