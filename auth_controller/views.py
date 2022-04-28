@@ -6,6 +6,7 @@ from rest_framework.decorators import (
     authentication_classes,
     permission_classes,
 )
+from rest_framework.permissions import IsAuthenticated
 
 from .serializers import UserRegistrationSerializer
 
@@ -40,4 +41,15 @@ def user_signup(request):
 
 
 def admin_signup(request):
+    pass
+
+
+@api_view(["POST"])
+def login(request):
+    pass
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def logout(request):
     pass
