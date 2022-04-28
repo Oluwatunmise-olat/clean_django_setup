@@ -7,7 +7,7 @@ class CustomUserManager(BaseUserManager):
 
     def create_user(self, email, password, kwargs):
 
-        if email:
+        if not email:
             raise ValueError("Email must be set")
 
         email = self.normalize_email(email)
@@ -23,5 +23,6 @@ class CustomUserManager(BaseUserManager):
         kwargs.setdefault("is_active", True)
         kwargs.setdefault("first_name", kwargs.get("first_name", None))
         kwargs.setdefault("last_name", kwargs.get("last_name", None))
+        kwargs.setdefault("is_superuser", True)
 
         return self.create_user(email, password, kwargs)

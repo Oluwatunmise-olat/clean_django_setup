@@ -1,0 +1,15 @@
+{
+  "1001": "Invalid Token Label",
+
+  "1101": "Unauthorized to access",
+  "1102": "Unauthenticated",
+  "1103": "Not Found",
+
+  "1201": "Token Expired",
+  "1202": "Token Tampered",
+
+  "1301": "Invalid Credentials",
+  "1302": "This number has been already registered",
+  "1303": "This email has been already registered",
+  "1304": "Body Field Errors"
+}

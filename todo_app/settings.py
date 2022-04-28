@@ -123,6 +123,4 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-REST_FRAMEWORK = {
-    "DEFAULT_PARSER_CLASSES": {"djangorestframework_camel_case.parser.CamelCaseJSONParser"}
-}
+REST_FRAMEWORK = {}
