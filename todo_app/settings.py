@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import django_heroku
 from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -18,7 +19,7 @@ if config("ENV") != "production":
 else:
     DEBUG = False
 
-ALLOWED_HOSTS = ["cleantodo-staging.herokuapp.com/=", "cleantodo.herokuapp.com"]
+ALLOWED_HOSTS = ["cleantodo-staging.herokuapp.com", "cleantodo.herokuapp.com", "localhost"]
 
 AUTH_USER_MODEL = "auth_controller.CustomUser"
 
@@ -125,3 +126,5 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 REST_FRAMEWORK = {}
+
+django_heroku.settings(locals())
