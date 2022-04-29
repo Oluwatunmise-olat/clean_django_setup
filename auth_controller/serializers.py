@@ -10,5 +10,13 @@ class UserRegistrationSerializer(ModelSerializer):
 
     class Meta:
         model = USER
-        fields = ["first_name", "last_name", "password", "email"]
-        read_only_fields = ("user_type", "created_at")
+        fields = [
+            "first_name",
+            "last_name",
+            "password",
+            "email",
+            "user_type",
+            "created_at",
+            "is_active",
+        ]
+        read_only_fields = ["user_type", "created_at", "is_active"]
