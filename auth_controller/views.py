@@ -1,3 +1,4 @@
+from common.enums import UserTypes
 from common.response import ResponseInstance
 from django.contrib.auth.hashers import make_password
 from rest_framework import status
@@ -39,9 +40,36 @@ def user_signup(request):
         message="User Created",
     )
 
-@api_view(['POST'])
+
+@api_view(["POST"])
+@authentication_classes([])
+@permission_classes([])
 def admin_signup(request):
-    pass
+    ser = UserRegistrationSerializer
+    serialized_request = ser(data=request.data)
+
+    if not serialized_request.is_valid():
+        return ResponseInstance.api_response(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            has_error=True,
+            error_code=1304,
+            data=serialized_request.errors,
+        )
+
+    user = serialized_request.save(
+        password=make_password(serialized_request.validated_data["password"]),
+        user_type=UserTypes["AdminUser"].value,
+        is_staff=True,
+    )
+
+    user_data = ser(instance=user)
+
+    return ResponseInstance.api_response(
+        status_code=status.HTTP_201_CREATED,
+        has_error=False,
+        data=user_data.data,
+        message="User Created",
+    )
 
 
 @api_view(["POST"])
