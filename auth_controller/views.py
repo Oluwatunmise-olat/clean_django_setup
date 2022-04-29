@@ -39,7 +39,7 @@ def user_signup(request):
         message="User Created",
     )
 
-
+@api_view(['POST'])
 def admin_signup(request):
     pass
 
