@@ -1,5 +1,4 @@
-from urllib import response
-
+from common.enums import UserTypes
 from django.test import Client, TestCase, tag
 from rest_framework import status
 
@@ -68,6 +67,49 @@ class AuthenticationTestCases(TestCase):
         self.assertEquals(json_data["error_code"], 1304)
         self.assertNotEquals(json_data["data"], {})
         self.assertFalse(json_data["success"])
+
+        is_user = UserFactory.filter(
+            first_name=self.data["first_name"], last_name=self.data["last_name"]
+        )
+
+        self.assertFalse(is_user.exists())
+
+    def test_admin_user_signup(self):
+        """Test given valid sign up data, admin user is created"""
+
+        response = self.client.post("/auth/admin/signup", self.data)
+
+        json_data = response.json()
+
+        self.assertEquals(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(json_data["success"])
+
+        with self.assertRaises(KeyError):
+            json_data["error_code"]
+
+        is_user = UserFactory.filter(email=self.data["email"])
+
+        self.assertTrue(is_user.exists())
+
+        user = is_user.get()
+
+        self.assertTrue(user.is_staff)
+        self.assertEquals(user.user_type, UserTypes["AdminUser"].value)
+
+    def test_admin_user_signup_with_existing_email(self):
+        """Test given an invalid data such as an already existing email, no admin user is created"""
+
+        UserFactory(is_staff=True, user_type=UserTypes["AdminUser"].value)
+
+        self.data["first_name"], self.data["last_name"] = "cool", "kid"
+
+        response = self.client.post("/auth/admin/signup", self.data)
+
+        json_data = response.json()
+
+        self.assertEquals(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertFalse(json_data["success"])
+        self.assertEquals(json_data["error_code"], 1304)
 
         is_user = UserFactory.filter(
             first_name=self.data["first_name"], last_name=self.data["last_name"]
