@@ -22,7 +22,6 @@ class UserRegistrationSerializer(ModelSerializer):
         read_only_fields = ["user_type", "created_at", "is_active"]
 
 
-class UserLoginSerializer(ModelSerializer):
-    class Meta:
-        model = USER
-        fields = ["email", "password"]
+class UserLoginSerializer(Serializer):
+    email = serializers.EmailField(required=True)
+    password = serializers.CharField(required=True)

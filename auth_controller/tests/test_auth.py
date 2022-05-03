@@ -116,3 +116,12 @@ class AuthenticationTestCases(TestCase):
         )
 
         self.assertFalse(is_user.exists())
+
+    def _test_login_with_valid_credentialsl(self):
+        pass
+
+    def _test_login_with_invalid_credentials(self):
+        pass
+
+    def _test_logout(self):
+        pass

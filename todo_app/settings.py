@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "rest_framework.authtoken",
     "auth_controller.apps.AuthControllerConfig",
 ]
 
@@ -121,8 +122,9 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-REST_FRAMEWORK = {}
+REST_FRAMEWORK = {"DEFAULT_AUTHENTICATION_CLASS": ["token_auth.token.CustomTokenAuthentication"]}
 
-TOKEN_AUTH_EXPIRATION_TIME_IN_SECONDS = ""
+# 30 days
+AUTH_TOKEN_EXPIRATION_TIME_IN_SECONDS = 60 * 60 * 24 * 30  # 60 secs * 60 mins * 24 hrs * 30 days
 
 django_heroku.settings(locals())

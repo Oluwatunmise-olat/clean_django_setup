@@ -3,6 +3,7 @@ from common.response import ResponseInstance
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.hashers import make_password
 from rest_framework import status
+from rest_framework.authtoken.models import Token
 from rest_framework.decorators import (
     api_view,
     authentication_classes,
@@ -76,6 +77,8 @@ def admin_signup(request):
 
 
 @api_view(["POST"])
+@authentication_classes([])
+@permission_classes([])
 def login(request):
     request_serializer = UserLoginSerializer(data=request.data)
     response_serializer = UserRegistrationSerializer
@@ -87,15 +90,21 @@ def login(request):
             error_code=1304,
             data=request_serializer.errors,
         )
+
     auth_user = authenticate(
         email=request_serializer.validated_data["email"],
         password=request_serializer.validated_data["password"],
     )
 
     if not auth_user:
-        return
+        return ResponseInstance.api_response(
+            status_code=status.HTTP_401_UNAUTHORIZED, has_error=True, error_code=1301
+        )
 
     response_data = response_serializer(instance=auth_user).data
+
+    token, _ = Token.objects.get_or_create(user=auth_user)
+    response_data["access_token"] = token.key
 
     return ResponseInstance.api_response(
         status_code=status.HTTP_200_OK,
