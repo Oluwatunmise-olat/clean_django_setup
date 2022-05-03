@@ -1,3 +1,5 @@
+from email import header
+
 from common.enums import UserTypes
 from django.test import Client, TestCase, tag
 from rest_framework import status
@@ -179,5 +181,32 @@ class AuthenticationTestCases(TestCase):
         self.assertEquals(json_data["error_code"], 1304)
 
     @tag("logout")
-    def _test_logout(self):
-        pass
+    def test_logout(self):
+        """Test user token is deleted on logout"""
+
+        UserFactory()
+
+        login_endpoint = "/auth/login"
+        logout_endpoint = "/auth/logout"
+
+        data = dict()
+        data["email"], data["password"] = self.data["email"], self.data["password"]
+
+        access_token = self.client.post(login_endpoint, data).json()["data"]["access_token"]
+
+        request_headers = {
+            "content-type": "Application/json",
+            "HTTP_AUTHORIZATION": f"Bearer {access_token}",
+        }
+
+        response = self.client.get(logout_endpoint, data, **request_headers)
+
+        self.assertEquals(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        second_response_call_to_protected_route = self.client.post(
+            logout_endpoint, data, **request_headers
+        )
+
+        self.assertEquals(
+            second_response_call_to_protected_route.status_code, status.HTTP_401_UNAUTHORIZED
+        )
