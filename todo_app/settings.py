@@ -123,4 +123,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {}
 
+TOKEN_AUTH_EXPIRATION_TIME_IN_SECONDS = ""
+
 django_heroku.settings(locals())
