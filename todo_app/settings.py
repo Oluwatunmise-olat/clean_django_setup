@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "auth_controller.apps.AuthControllerConfig",
+    "post_controller.apps.PostControllerConfig",
 ]
 
 MIDDLEWARE = [

@@ -1,5 +1,3 @@
-from email import header
-
 from common.enums import UserTypes
 from django.test import Client, TestCase, tag
 from rest_framework import status

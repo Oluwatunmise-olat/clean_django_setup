@@ -1,5 +1,3 @@
-import pstats
-
 from common.enums import UserTypes
 from common.response import ResponseInstance
 from django.contrib.auth import authenticate, get_user_model
@@ -125,8 +123,3 @@ def logout(request):
     return ResponseInstance.api_response(
         has_error=False, status_code=status.HTTP_204_NO_CONTENT, message="Logged Out Successfully"
     )
-
-
-@api_view(["post"])
-def change_password(request):
-    pass

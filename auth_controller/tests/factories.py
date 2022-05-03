@@ -3,8 +3,6 @@ from auth_controller import models
 from django.contrib.auth.hashers import make_password
 from faker import Faker
 
-fake = Faker()
-
 
 class UserFactory(factory.django.DjangoModelFactory):
     class Meta:
