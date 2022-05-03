@@ -2,6 +2,7 @@ from common.enums import UserTypes
 from common.response import ResponseInstance
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.hashers import make_password
+from django.http import HttpResponse
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import (
@@ -117,4 +118,8 @@ def login(request):
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def logout(request):
-    pass
+    Token.objects.delete(key=request.auth)
+
+    return ResponseInstance.api_response(
+        has_error=False, status_code=status.HTTP_204_NO_CONTENT, message="Logged Out Successfully"
+    )

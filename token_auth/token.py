@@ -29,7 +29,7 @@ class CustomTokenAuthentication(TokenAuthentication):
 
         if (
             timezone.now()
-            < timedelta(seconds=settings.AUTH_TOKEN_EXPIRATION_TIME_IN_SECONDS) + token.created
+            > timedelta(seconds=settings.AUTH_TOKEN_EXPIRATION_TIME_IN_SECONDS) + token.created
         ):
             return True
 
