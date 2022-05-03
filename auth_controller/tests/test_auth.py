@@ -16,6 +16,7 @@ class AuthenticationTestCases(TestCase):
         }
         return
 
+    @tag("user-signup")
     def test_user_signup_with_valid_data(self):
         """Test given valid sign up data, user is created"""
 
@@ -33,6 +34,7 @@ class AuthenticationTestCases(TestCase):
 
         self.assertTrue(is_user.exists())
 
+    @tag("user-signup")
     def test_user_signup_with_existing_email(self):
         """Test given an invalid data such as an already existing email, no user is created"""
 
@@ -54,8 +56,9 @@ class AuthenticationTestCases(TestCase):
 
         self.assertFalse(is_user.exists())
 
+    @tag("user-signup")
     def test_user_signup_with_missing_fields(self):
-        """Test given in complete or wrong body field data, no user is created"""
+        """Test given an incomplete or wrong body field data, no user is created"""
 
         del self.data["email"]
 
@@ -74,6 +77,7 @@ class AuthenticationTestCases(TestCase):
 
         self.assertFalse(is_user.exists())
 
+    @tag("admin-signup")
     def test_admin_user_signup(self):
         """Test given valid sign up data, admin user is created"""
 
@@ -96,6 +100,7 @@ class AuthenticationTestCases(TestCase):
         self.assertTrue(user.is_staff)
         self.assertEquals(user.user_type, UserTypes["AdminUser"].value)
 
+    @tag("admin-signup")
     def test_admin_user_signup_with_existing_email(self):
         """Test given an invalid data such as an already existing email, no admin user is created"""
 
@@ -117,11 +122,62 @@ class AuthenticationTestCases(TestCase):
 
         self.assertFalse(is_user.exists())
 
-    def _test_login_with_valid_credentialsl(self):
-        pass
+    @tag("login")
+    def test_login_with_valid_credentials(self):
+        """Test given a valid user credentials, access token is returned in response object"""
 
-    def _test_login_with_invalid_credentials(self):
-        pass
+        UserFactory()
 
+        data = dict()
+        data["email"], data["password"] = self.data["email"], self.data["password"]
+
+        response = self.client.post("/auth/login", data)
+
+        json_data = response.json()
+
+        self.assertEquals(response.status_code, status.HTTP_200_OK)
+        self.assertIn("access_token", json_data["data"])
+        self.assertNotIn("error_code", json_data)
+        self.assertTrue(json_data["success"])
+        self.assertIsInstance(json_data["data"]["access_token"], str)
+        self.assertTrue(len(json_data["data"]["access_token"]) > 5)
+
+    @tag("login")
+    def test_login_with_invalid_credentials(self):
+        """Test given invalid login credentials, error is thrown and access token isn't passed"""
+
+        UserFactory()
+
+        data = dict()
+        data["password"] = "password"
+        data["email"] = self.data["email"]
+
+        response = self.client.post("/auth/login", data)
+
+        json_data = response.json()
+
+        self.assertEquals(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertIn("error_code", json_data)
+        self.assertFalse(json_data["success"])
+        self.assertNotIn("access_token", json_data["data"])
+        self.assertEquals(json_data["error_code"], 1301)
+
+    @tag("login")
+    def test_login_with_missing_fields(self):
+        """Test given an incomplete or wrong body field data, no access token is passed"""
+
+        del self.data["email"]
+
+        response = self.client.post("/auth/login", self.data)
+
+        json_data = response.json()
+
+        self.assertEquals(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("error_code", json_data)
+        self.assertFalse(json_data["success"])
+        self.assertNotIn("access_token", json_data["data"])
+        self.assertEquals(json_data["error_code"], 1304)
+
+    @tag("logout")
     def _test_logout(self):
         pass
