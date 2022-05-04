@@ -124,7 +124,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": ("token_auth.token.CustomTokenAuthentication",)
+    "DEFAULT_AUTHENTICATION_CLASSES": ("token_auth.token.CustomTokenAuthentication",),
+    "DEFAULT_PAGINATION_CLASS": "common.pagination.CustomPagination",
+    "EXCEPTION_HANDLER": "common.exceptions.custom_exception_handler",
 }
 
 # 30 days

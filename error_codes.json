@@ -3,7 +3,7 @@
 
   "1101": "Unauthorized to access",
   "1102": "Unauthenticated",
-  "1103": "Not Found",
+  "1103": "Resource Not Found",
 
   "1201": "Token Expired",
   "1202": "Token Tampered",

@@ -13,17 +13,18 @@ class ResponseFormatter:
         error_code=None,
     ):
 
-        if has_error:
-            if not error_code:
-                raise ValueError("'error_code' field is required")
+        if has_error and not error_code:
+            raise ValueError("'error_code' field is required")
 
+        if has_error:
             response_data = self.__failure(error_code)
             response_data["data"] = data
 
             return Response(response_data, status=status_code)
 
         if not message:
-            raise ValueError("'message' field is required")
+            # raise ValueError("'message' field is required")
+            message = ""
 
         response_data = self.__success()
         response_data.setdefault("message", message)
