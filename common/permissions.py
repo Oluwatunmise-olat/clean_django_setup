@@ -6,7 +6,7 @@ from common.response import ResponseInstance
 
 
 class IsOwnerOrAdmin(BasePermission):
-    message = "Unatorized to Access Resource"
+    message = "Unauthorized to Access Resource"
 
     def has_object_permission(self, request, view, obj):
 
