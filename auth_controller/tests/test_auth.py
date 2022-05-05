@@ -2,17 +2,17 @@ from common.enums import UserTypes
 from django.test import Client, TestCase, tag
 from rest_framework import status
 
-from .factories import UserFactory
+from .factories import UserModelFactory
 
 
 class AuthenticationTestCases(TestCase):
     def setUp(self):
         self.client = Client()
         self.data = {
-            "first_name": UserFactory.first_name,
-            "last_name": UserFactory.last_name,
-            "password": UserFactory.password,
-            "email": UserFactory.email,
+            "first_name": UserModelFactory.first_name,
+            "last_name": UserModelFactory.last_name,
+            "password": UserModelFactory.password,
+            "email": UserModelFactory.email,
         }
         return
 
@@ -30,7 +30,7 @@ class AuthenticationTestCases(TestCase):
         with self.assertRaises(KeyError):
             json_data["error_code"]
 
-        is_user = UserFactory.filter(email=self.data["email"])
+        is_user = UserModelFactory.filter(email=self.data["email"])
 
         self.assertTrue(is_user.exists())
 
@@ -38,7 +38,7 @@ class AuthenticationTestCases(TestCase):
     def test_user_signup_with_existing_email(self):
         """Test given an invalid data such as an already existing email, no user is created"""
 
-        UserFactory()
+        UserModelFactory()
 
         self.data["first_name"], self.data["last_name"] = "cool", "kid"
 
@@ -50,7 +50,7 @@ class AuthenticationTestCases(TestCase):
         self.assertFalse(json_data["success"])
         self.assertEquals(json_data["error_code"], 1304)
 
-        is_user = UserFactory.filter(
+        is_user = UserModelFactory.filter(
             first_name=self.data["first_name"], last_name=self.data["last_name"]
         )
 
@@ -71,7 +71,7 @@ class AuthenticationTestCases(TestCase):
         self.assertNotEquals(json_data["data"], {})
         self.assertFalse(json_data["success"])
 
-        is_user = UserFactory.filter(
+        is_user = UserModelFactory.filter(
             first_name=self.data["first_name"], last_name=self.data["last_name"]
         )
 
@@ -91,7 +91,7 @@ class AuthenticationTestCases(TestCase):
         with self.assertRaises(KeyError):
             json_data["error_code"]
 
-        is_user = UserFactory.filter(email=self.data["email"])
+        is_user = UserModelFactory.filter(email=self.data["email"])
 
         self.assertTrue(is_user.exists())
 
@@ -104,7 +104,7 @@ class AuthenticationTestCases(TestCase):
     def test_admin_user_signup_with_existing_email(self):
         """Test given an invalid data such as an already existing email, no admin user is created"""
 
-        UserFactory(is_staff=True, user_type=UserTypes["AdminUser"].value)
+        UserModelFactory(is_staff=True, user_type=UserTypes["AdminUser"].value)
 
         self.data["first_name"], self.data["last_name"] = "cool", "kid"
 
@@ -116,7 +116,7 @@ class AuthenticationTestCases(TestCase):
         self.assertFalse(json_data["success"])
         self.assertEquals(json_data["error_code"], 1304)
 
-        is_user = UserFactory.filter(
+        is_user = UserModelFactory.filter(
             first_name=self.data["first_name"], last_name=self.data["last_name"]
         )
 
@@ -126,7 +126,7 @@ class AuthenticationTestCases(TestCase):
     def test_login_with_valid_credentials(self):
         """Test given a valid user credentials, access token is returned in response object"""
 
-        UserFactory()
+        UserModelFactory()
 
         data = dict()
         data["email"], data["password"] = self.data["email"], self.data["password"]
@@ -146,7 +146,7 @@ class AuthenticationTestCases(TestCase):
     def test_login_with_invalid_credentials(self):
         """Test given invalid login credentials, error is thrown and access token isn't passed"""
 
-        UserFactory()
+        UserModelFactory()
 
         data = dict()
         data["password"] = "password"
@@ -182,7 +182,7 @@ class AuthenticationTestCases(TestCase):
     def test_logout(self):
         """Test user token is deleted on logout"""
 
-        UserFactory()
+        UserModelFactory()
 
         login_endpoint = "/auth/login"
         logout_endpoint = "/auth/logout"
