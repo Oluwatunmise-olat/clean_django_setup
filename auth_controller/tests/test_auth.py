@@ -193,7 +193,7 @@ class AuthenticationTestCases(TestCase):
         access_token = self.client.post(login_endpoint, data).json()["data"]["access_token"]
 
         request_headers = {
-            "content-type": "Application/json",
+            "content_type": "Application/json",
             "HTTP_AUTHORIZATION": f"Bearer {access_token}",
         }
 

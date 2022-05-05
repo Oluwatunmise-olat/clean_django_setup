@@ -43,7 +43,7 @@ class PostRequestView(APIView):
             data=serialized_response,
         )
 
-    def post(self, request, *args, **params):
+    def post(self, request):
         serialized_request = self.serializer_class(data=request.data)
 
         if not serialized_request.is_valid():
@@ -59,7 +59,7 @@ class PostRequestView(APIView):
         serialized_response = self.serializer_class(instance=post).data
 
         return ResponseInstance.api_response(
-            status_code=status.HTTP_200_OK,
+            status_code=status.HTTP_201_CREATED,
             has_error=False,
             message="Post Created",
             data=serialized_response,
@@ -90,7 +90,9 @@ class PostRequestView(APIView):
         self.check_object_permissions(request, post_instance.get())
 
         serialized_response = self.serializer_class(
-            instance=serialized_request.update(author=request.user, instance=post_instance.get())
+            instance=serialized_request.update(
+                instance=post_instance.get(), validated_data=serialized_request.validated_data
+            )
         ).data
 
         return ResponseInstance.api_response(

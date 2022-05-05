@@ -16,3 +16,7 @@ class PostModelFactory(factory.django.DjangoModelFactory):
     is_done = True
     description = fake_data.sentence(nb_words=15)
     author = factory.SubFactory(UserModelFactory)
+
+    @staticmethod
+    def filter(*args, **kwargs):
+        return PostModelFactory._meta.model.objects.filter(*args, **kwargs)

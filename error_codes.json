@@ -11,5 +11,7 @@
   "1301": "Invalid Credentials",
   "1302": "This number has been already registered",
   "1303": "This email has been already registered",
-  "1304": "Body Field Errors"
+  "1304": "Body Field Errors",
+
+  "1401": "Internal Server Error"
 }

@@ -19,6 +19,12 @@ def custom_exception_handler(exception, context):
     if status_code == 404:
         error_code = 1103
 
+    if status_code >= 500:
+        error_code = 1401
+
+    if status_code not in [400, 401, 403, 404]:
+        error_code = 1304
+
     return ResponseInstance.api_response(
         has_error=True,
         status_code=status_code,
