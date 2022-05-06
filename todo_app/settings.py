@@ -1,6 +1,6 @@
 from pathlib import Path
+from urllib.parse import urlparse
 
-import django_heroku
 from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -15,7 +15,7 @@ if config("ENV") != "production":
 else:
     DEBUG = False
 
-ALLOWED_HOSTS = ["cleantodo-staging.herokuapp.com", "cleantodo.herokuapp.com", "localhost"]
+ALLOWED_HOSTS = ["*", "localhost"]
 
 AUTH_USER_MODEL = "auth_controller.CustomUser"
 
@@ -69,17 +69,19 @@ WSGI_APPLICATION = "todo_app.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+DATABASE_URL = config("DATABASE_URL", None)
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
         "NAME": config("DB_NAME"),
-        "USER": config("DB_USER"),
+        "USER": config("DB_USERNAME"),
         "PASSWORD": config("DB_PASSWORD"),
         "HOST": config("DB_HOST"),
         "PORT": config("DB_PORT"),
+        "OPTIONS": {"sslmode": "require"},
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -131,5 +133,3 @@ REST_FRAMEWORK = {
 
 # 30 days
 AUTH_TOKEN_EXPIRATION_TIME_IN_SECONDS = 60 * 60 * 24 * 30  # 60 secs * 60 mins * 24 hrs * 30 days
-
-django_heroku.settings(locals())
