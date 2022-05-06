@@ -15,7 +15,7 @@ if config("ENV") != "production":
 else:
     DEBUG = False
 
-ALLOWED_HOSTS = ["*", "localhost"]
+ALLOWED_HOSTS = ["clean-todo-app-bb3eh.ondigitalocean.app", "localhost"]
 
 AUTH_USER_MODEL = "auth_controller.CustomUser"
 
